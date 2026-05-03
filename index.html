@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Heirloom Church — Long-Term Budget Walkthrough</title>
+<meta name="description" content="A pastor-friendly walkthrough of Heirloom Church's long-term budget: 2025 actuals through June 2028 forecast." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap">
+<link rel="icon" href="heirloom-logo.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #FBF7F1;
+    --surface: #FFFFFF;
+    --ink: #1F1A14;
+    --ink-soft: #4B433A;
+    --ink-mute: #847A6D;
+    --line: #ECE3D4;
+    --line-strong: #D9CDB8;
+    --orange: #E55A1B;
+    --orange-soft: #F8D9C6;
+    --orange-deep: #B8420E;
+    --sage: #6F8B6E;
+    --sage-soft: #DCE6DB;
+    --gold: #C8923A;
+    --gold-soft: #F2E2C2;
+    --rose: #B85A5A;
+    --rose-soft: #F4D8D8;
+    --teal: #3F7B85;
+    --teal-soft: #D2E4E7;
+    --good: #4F8A4C;
+    --warn: #C68A1A;
+    --bad:  #B23A2D;
+    --shadow: 0 1px 2px rgba(31,26,20,.04), 0 8px 32px rgba(31,26,20,.06);
+    --radius-l: 22px;
+    --radius-m: 14px;
+    --radius-s: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  h1,h2,h3,h4 { font-family: "Fraunces", Georgia, serif; font-weight: 600; letter-spacing: -.01em; line-height: 1.15; margin: 0; }
+  h1 { font-size: clamp(2.4rem, 4.5vw, 3.6rem); font-weight: 600; }
+  h2 { font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+  h3 { font-size: 1.2rem; }
+  p  { margin: 0; color: var(--ink-soft); }
+  a  { color: var(--orange-deep); text-decoration: none; }
+
+  /* layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: 0; }
+
+  /* header / hero */
+  header {
+    background:
+      radial-gradient(1100px 500px at 90% -10%, rgba(229,90,27,.10), transparent 60%),
+      radial-gradient(800px 400px at 0% 0%, rgba(111,139,110,.10), transparent 60%),
+      var(--bg);
+    padding: 28px 0 0;
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px; max-width: 1200px; margin: 0 auto;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-brand img { height: 38px; width: auto; }
+  .nav-brand .sub { font-size: .82rem; color: var(--ink-mute); letter-spacing: .04em; text-transform: uppercase; }
+  .nav-meta { font-size: .82rem; color: var(--ink-mute); letter-spacing: .04em; text-transform: uppercase; }
+
+  .hero { padding: 56px 0 72px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-strong); background: var(--surface); border-radius: 999px; font-size: .8rem; color: var(--ink-soft); letter-spacing: .04em; text-transform: uppercase; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+  .hero h1 { margin: 22px 0 16px; max-width: 18ch; }
+  .hero .lede { font-size: 1.15rem; color: var(--ink-soft); max-width: 64ch; }
+  .hero .span-orange { color: var(--orange-deep); font-style: italic; }
+
+  /* metric strip */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+  @media (max-width: 900px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: 22px 22px 20px;
+    box-shadow: var(--shadow);
+    position: relative; overflow: hidden;
+  }
+  .metric .label { font-size: .78rem; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .06em; }
+  .metric .value { font-family: "Fraunces", serif; font-size: 2rem; font-weight: 600; margin-top: 8px; letter-spacing: -.01em; }
+  .metric .sub { font-size: .85rem; color: var(--ink-soft); margin-top: 4px; }
+  .metric .accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+  .accent.orange { background: var(--orange); }
+  .accent.sage   { background: var(--sage); }
+  .accent.gold   { background: var(--gold); }
+  .accent.teal   { background: var(--teal); }
+  .accent.rose   { background: var(--rose); }
+  .delta { font-size: .8rem; padding: 2px 8px; border-radius: 999px; display: inline-block; margin-top: 8px; }
+  .delta.up   { background: var(--sage-soft); color: #3a5b39; }
+  .delta.down { background: var(--rose-soft); color: #7d2a2a; }
+  .delta.flat { background: var(--gold-soft); color: #75541a; }
+
+  /* section heads */
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+  .section-head h2 { max-width: 22ch; }
+  .section-head p  { max-width: 56ch; color: var(--ink-soft); }
+  .step-no { font-family: "Fraunces", serif; font-size: 1rem; color: var(--orange); letter-spacing: .04em; text-transform: uppercase; }
+
+  /* card grid */
+  .grid-2 { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 980px){ .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; } }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-l); padding: 26px; box-shadow: var(--shadow); }
+  .card h3 { margin-bottom: 6px; }
+  .card .hint { font-size: .85rem; color: var(--ink-mute); }
+
+  .chart-shell { height: 360px; position: relative; }
+  .chart-shell.tall { height: 440px; }
+
+  /* table */
+  table.fin { width: 100%; border-collapse: collapse; margin-top: 14px; font-variant-numeric: tabular-nums; }
+  table.fin th, table.fin td { text-align: right; padding: 10px 10px; border-bottom: 1px solid var(--line); font-size: .92rem; }
+  table.fin th:first-child, table.fin td:first-child { text-align: left; }
+  table.fin thead th { color: var(--ink-mute); font-weight: 500; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+  table.fin tr.total td { font-weight: 600; border-top: 2px solid var(--ink); border-bottom: 0; padding-top: 12px; }
+  table.fin tr.subtle td { color: var(--ink-soft); }
+  .pos { color: var(--good); }
+  .neg { color: var(--bad); }
+
+  /* benchmark bars */
+  .bench-row { display: grid; grid-template-columns: 160px 1fr 90px; gap: 16px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .bench-row:last-child { border-bottom: 0; }
+  .bench-name { font-size: .95rem; }
+  .bench-bar { position: relative; height: 14px; background: #F1EADC; border-radius: 999px; overflow: visible; }
+  .bench-band { position: absolute; top: 0; bottom: 0; background: var(--sage-soft); border-radius: 999px; }
+  .bench-marker { position: absolute; top: -5px; width: 4px; height: 24px; border-radius: 4px; background: var(--orange); box-shadow: 0 0 0 3px rgba(229,90,27,.15); }
+  .bench-val { font-variant-numeric: tabular-nums; font-size: .92rem; color: var(--ink-soft); text-align: right; }
+  .bench-tag { font-size: .72rem; color: var(--ink-mute); display: block; }
+  .ok    { color: var(--good); }
+  .high  { color: var(--bad); }
+  .low   { color: var(--warn); }
+
+  /* driver cards */
+  .driver-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-l); padding: 22px; box-shadow: var(--shadow); position: relative; overflow: hidden;}
+  .driver-card .num { font-family: "Fraunces", serif; font-size: 1.8rem; color: var(--orange); line-height: 1; opacity: .35; position: absolute; right: 18px; top: 18px; font-weight: 600; }
+  .driver-card h4 { padding-right: 36px; }
+  .driver-card h4 { font-family: "Fraunces", serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+  .driver-card p  { font-size: .94rem; }
+  .driver-card.lever { border-left: 4px solid var(--sage); }
+  .driver-card.driver { border-left: 4px solid var(--orange); }
+
+  /* callout */
+  .callout { padding: 26px 28px; border-radius: var(--radius-l); border: 1px solid var(--gold-soft); background: linear-gradient(180deg, #FFFAF0 0%, #FFF 100%); }
+  .callout h3 { color: var(--orange-deep); font-family: "Fraunces", serif; }
+  .callout p { color: var(--ink-soft); margin-top: 6px; }
+
+  /* footer */
+  footer { padding: 56px 0 80px; color: var(--ink-mute); font-size: .9rem; border-top: 1px solid var(--line); }
+  footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: .8rem; color: var(--ink-soft); }
+
+  /* nav anchors */
+  .toc { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+  .toc a { font-size: .88rem; padding: 7px 14px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-soft); border-radius: 999px; }
+  .toc a:hover { border-color: var(--orange); color: var(--orange-deep); }
+
+  /* utility */
+  .stack > * + * { margin-top: 14px; }
+  .small { font-size: .85rem; color: var(--ink-mute); }
+  .accent-text { color: var(--orange-deep); font-weight: 600; }
+  .legend-dots { display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap; font-size: .85rem; color: var(--ink-soft); }
+  .ldot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="nav-brand">
+      <img src="heirloom-logo.png" alt="Heirloom Church">
+      <div>
+        <div style="font-family:Fraunces,serif; font-weight:600; font-size:1.05rem;">Heirloom Church</div>
+        <div class="sub">Long-Term Budget Walkthrough</div>
+      </div>
+    </div>
+    <div class="nav-meta">2025 Actuals → Jun 2028 Forecast</div>
+  </div>
+
+  <div class="wrap hero">
+    <span class="eyebrow"><span class="dot"></span>Prepared by TurnkeyCFO · May 2026</span>
+    <h1>A clear picture of <span class="span-orange">Heirloom's next three years</span> — built one assumption at a time.</h1>
+    <p class="lede">This walkthrough turns the long-term budget model into something we can talk through together: where the money is coming from, where it's going, what the plan says about cash, and the handful of levers that decide whether 2027 ends with a surplus or a stretch. No spreadsheet acrobatics — just the story.</p>
+    <div class="toc">
+      <a href="#headlines">Headlines</a>
+      <a href="#multi-year">Multi-year P&amp;L</a>
+      <a href="#revenue">Revenue mix</a>
+      <a href="#departments">Where it goes</a>
+      <a href="#cash">Cash by month</a>
+      <a href="#drivers">Why cash declines</a>
+      <a href="#levers">What reverses it</a>
+      <a href="#reserves">Reserves</a>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="accent orange"></div>
+        <div class="label">2026 Total Revenue</div>
+        <div class="value">$469k</div>
+        <div class="sub">Plan year — internal + partners + designated</div>
+        <span class="delta up">+24% vs 2025</span>
+      </div>
+      <div class="metric"><div class="accent sage"></div>
+        <div class="label">2026 Net Income</div>
+        <div class="value">$74k</div>
+        <div class="sub">Surplus — strongest year of the plan</div>
+        <span class="delta up">+15.8% margin</span>
+      </div>
+      <div class="metric"><div class="accent gold"></div>
+        <div class="label">2027 Net Income</div>
+        <div class="value">−$10k</div>
+        <div class="sub">Tight year as partner $ rolls off</div>
+        <span class="delta flat">−2.3% margin</span>
+      </div>
+      <div class="metric"><div class="accent teal"></div>
+        <div class="label">Reserves @ Jun 2028</div>
+        <div class="value">$229k</div>
+        <div class="sub">$180k base + accrued interest + surplus</div>
+        <span class="delta up">Buffer intact</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- Headlines -->
+<section id="headlines">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">01 · The picture in one breath</div>
+        <h2>2026 is strong. 2027 is the test. The plan is buildable — but it depends on three real choices.</h2>
+      </div>
+      <p>The model carries <strong>actual numbers from 2025 and early 2026</strong>, then forecasts every assumption — attendance, giving, hires, rent, partner funding — through June 2028. Numbers below are the current plan, not a hope.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>The good news</h3>
+        <p style="margin-top:10px;">Internal tithes are on a steep climb — from <strong>$198k in 2025</strong> to a forecast <strong>$355k in 2027</strong>, driven by attendance growth from 85 → 185 average Sundays. 2026 is on track for a <strong>~$74k surplus</strong>.</p>
+      </div>
+      <div class="card">
+        <h3>The crunch</h3>
+        <p style="margin-top:10px;">External partner gifts taper hard: <strong>$155k → $19k</strong> from 2025 to 2027, then zero. Personnel costs ramp (Noble goes full-time mid-2027). Sunday rent steps from <strong>$1.5k to $4.5k/mo</strong> in Sep 2027.</p>
+      </div>
+      <div class="card">
+        <h3>The decision</h3>
+        <p style="margin-top:10px;">Whether 2027 closes flat or in deficit comes down to <strong>five levers</strong>: new partner funding, per-attendee giving, attendance growth, timing of the rent step, and timing of Noble's full-time move. Each has a number behind it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Multi-year P&L -->
+<section id="multi-year">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">02 · Multi-year P&amp;L</div>
+        <h2>Revenue, expenses, and what's left over — four years on one chart.</h2>
+      </div>
+      <p>Revenue and expenses are stacked side-by-side for each year. The line on top is net income — the surplus or deficit after every dollar in and out. 2028 is shown through June only.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Revenue vs expenses</h3>
+        <div class="hint">All values USD thousands. Net income line on the right axis.</div>
+        <div class="chart-shell tall"><canvas id="pnlChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Annual P&amp;L summary</h3>
+        <div class="hint">All figures in USD. 2028 is half-year.</div>
+        <table class="fin">
+          <thead><tr><th>Line</th><th>2025</th><th>2026</th><th>2027</th><th>2028 H1</th></tr></thead>
+          <tbody>
+            <tr><td>Total Revenue</td><td>$379,431</td><td>$469,136</td><td>$413,800</td><td>$212,700</td></tr>
+            <tr><td>Total Expenses</td><td>$419,774</td><td>$395,097</td><td>$423,423</td><td>$235,989</td></tr>
+            <tr class="total"><td>Net Income</td><td class="neg">−$40,343</td><td class="pos">$74,039</td><td class="neg">−$9,623</td><td class="neg">−$23,289</td></tr>
+            <tr class="subtle"><td>NI margin</td><td>−10.6%</td><td>+15.8%</td><td>−2.3%</td><td>−10.9%</td></tr>
+          </tbody>
+        </table>
+        <p class="small" style="margin-top:14px;">2025's deficit reflects partner timing and one-time items. 2026 is the strongest year. 2027 reflects the partner cliff + rent step. 2028 H1 is naturally light because December is the largest giving month and isn't in the half.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Revenue mix -->
+<section id="revenue">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">03 · Revenue composition</div>
+        <h2>The mix is shifting from partner-funded to congregation-funded — that's the whole story.</h2>
+      </div>
+      <p>In 2025, external partners provided <strong>41%</strong> of revenue. By 2027 that drops to <strong>5%</strong>, and by 2028 essentially zero. Internal tithes do the heavy lifting from here on — that's a healthy long-term shape, but it has to land.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Where revenue comes from</h3>
+        <div class="hint">Stacked annual revenue, USD thousands.</div>
+        <div class="chart-shell"><canvas id="revStack"></canvas></div>
+        <div class="legend-dots">
+          <span><span class="ldot" style="background:var(--orange)"></span>Internal Tithes</span>
+          <span><span class="ldot" style="background:var(--gold)"></span>External Partner Gifts</span>
+          <span><span class="ldot" style="background:var(--sage)"></span>Designated + Other</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Internal vs external — % of total</h3>
+        <div class="hint">Target: ≥80% internal as partners roll off.</div>
+        <div class="chart-shell"><canvas id="mixPct"></canvas></div>
+        <p class="small" style="margin-top:14px;">The <strong>$160 / attendee / month</strong> driver is a conservative anchor — it's flat across all four years. Any per-attendee growth on top of that compounds straight to the bottom line.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Departments -->
+<section id="departments">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">04 · Where the money goes</div>
+        <h2>Personnel is half. Operations is a quarter. Everything else fits in the remaining quarter.</h2>
+      </div>
+      <p>Each department is benchmarked to a healthy church-budget range. Bars below show the 2026 plan vs. the benchmark band for that line.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>2026 expense mix</h3>
+        <div class="hint">All departments, planned spend.</div>
+        <div class="chart-shell"><canvas id="deptDonut"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Department % of revenue vs benchmark</h3>
+        <div class="hint">Green band = healthy range. Orange marker = 2026 plan.</div>
+        <div id="benchList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cash trajectory -->
+<section id="cash">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">05 · Operating cash by month</div>
+        <h2>Cash dips through summer, recovers with the December lift, then tightens again in 2028.</h2>
+      </div>
+      <p>This is end-of-month operating cash — the checking-account view, not reserves. Notice the December bump every year (annual giving rhythm) and the spring softness when ministry expenses lead giving.</p>
+    </div>
+
+    <div class="card">
+      <h3>Ending operating cash, monthly</h3>
+      <div class="hint">USD thousands. 2025 actual + 2026/2027/2028 plan. Reserves ($180k+) sit separate.</div>
+      <div class="chart-shell tall"><canvas id="cashLine"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- Drivers of decline -->
+<section id="drivers">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">06 · Why operating cash tightens</div>
+        <h2>Four real forces are pressing on cash at the same time.</h2>
+      </div>
+      <p>None of these are surprises and none are emergencies. They're the natural consequence of growing: bigger team, bigger venue, less outside help. Knowing them lets us plan against them.</p>
+    </div>
+
+    <div class="grid-4">
+      <div class="driver-card driver"><span class="num">1</span>
+        <h4>Partner cliff</h4>
+        <p>External partner gifts: <strong>$155k → $142k → $80k → $30k</strong> across 2025–2028 H1. By design — partners aren't permanent — but the gap has to be replaced.</p>
+      </div>
+      <div class="driver-card driver"><span class="num">2</span>
+        <h4>Personnel ramp</h4>
+        <p>Total comp moves from <strong>~$176k</strong> to <strong>$232k</strong> by 2027 as Noble shifts to full-time (Jul 2027), retirement contributions begin, and a 3% COL kicks in.</p>
+      </div>
+      <div class="driver-card driver"><span class="num">3</span>
+        <h4>Rent step-up</h4>
+        <p>Sunday rent: <strong>$1,500/mo → $4,500/mo</strong> starting Sep 2027 — new venue / second service. About <strong>$36k/yr</strong> additional once fully on.</p>
+      </div>
+      <div class="driver-card driver"><span class="num">4</span>
+        <h4>Internal giving must catch up</h4>
+        <p>At $160/attendee/mo and the planned attendance curve, internal tithes <em>do</em> grow — but they need to grow faster than partners + rent + payroll combined.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Levers -->
+<section id="levers">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">07 · What reverses it</div>
+        <h2>Five levers, each with a real dollar value attached.</h2>
+      </div>
+      <p>These are the buttons we can press. They aren't all-or-nothing — pulling two of the smaller ones often gets us where one big one would.</p>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="driver-card lever"><span class="num">A</span>
+        <h4>New partners to fill the gap</h4>
+        <p>Each new partner at <strong>$25k/yr</strong> closes a year's deficit cleanly. Two new partners = comfortable surplus through 2027.</p>
+        <p class="small" style="margin-top:10px;"><span class="accent-text">Owner:</span> Pastoral relationships</p>
+      </div>
+      <div class="driver-card lever"><span class="num">B</span>
+        <h4>Per-attendee giving up to $185</h4>
+        <p>Moving the per-attendee dial from <strong>$160 → $185</strong> (+15.6%) at 155 attendees adds about <strong>$46k/yr</strong>. Single biggest lever.</p>
+        <p class="small" style="margin-top:10px;"><span class="accent-text">Owner:</span> Generosity teaching + onboarding</p>
+      </div>
+      <div class="driver-card lever"><span class="num">C</span>
+        <h4>Attendance growth</h4>
+        <p>Every additional <strong>10 attendees</strong> at $160/mo = <strong>$19,200/yr</strong>. The 2028 jump from 155 → 195 is where the model hits cash positive.</p>
+        <p class="small" style="margin-top:10px;"><span class="accent-text">Owner:</span> Outreach, ministry quality</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="driver-card lever"><span class="num">D</span>
+        <h4>Defer or phase the rent step</h4>
+        <p>Pushing the Sep-2027 rent jump to mid-2028 saves roughly <strong>$30k</strong>. Or land a venue closer to <strong>$3k/mo</strong> and the math changes immediately.</p>
+        <p class="small" style="margin-top:10px;"><span class="accent-text">Owner:</span> Pastor / venue search</p>
+      </div>
+      <div class="driver-card lever"><span class="num">E</span>
+        <h4>Defer Noble's full-time move</h4>
+        <p>If Noble stays part-time through end of 2027 (vs. Jul 2027), saves <strong>$10–12k</strong>. Real trade-off: worship leadership capacity for the new venue.</p>
+        <p class="small" style="margin-top:10px;"><span class="accent-text">Owner:</span> Eldership decision</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reserves -->
+<section id="reserves">
+  <div class="wrap">
+    <div class="callout">
+      <h3>Reserves are the safety net — not the runway.</h3>
+      <p><strong>$180k</strong> sits in reserves earning ~2% (<strong>~$3,600/yr</strong>). Surplus from 2026 lifts it; modest interest carries it. By June 2028, reserves are projected at <strong>$229k</strong>. The discipline of the plan is to not pull from reserves to cover operating shortfalls — they stay intact for a real emergency or a strategic, board-approved investment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- closing -->
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="step-no">08 · How to read this in one sentence</div>
+        <h2>Heirloom is moving from "partner-supported" to "congregation-supported." 2026 proves the model. 2027 is the year the levers matter most.</h2>
+      </div>
+      <p>The numbers above aren't predictions — they're a plan. As actuals come in each month, we update the model and revisit which levers are still ours to pull. Nothing here changes without us deciding it changes.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><h3>What's already true</h3><p style="margin-top:10px;">2025 closed at $379k revenue, $420k expense. 2026 is on track for $469k revenue and a $74k surplus.</p></div>
+      <div class="card"><h3>What we're watching</h3><p style="margin-top:10px;">Per-attendee giving, partner pipeline, and venue conversations — those three signals decide 2027.</p></div>
+      <div class="card"><h3>What changes monthly</h3><p style="margin-top:10px;">Actuals reconcile against budget every week. The plan adjusts each quarter as drivers update.</p></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div style="font-family:Fraunces,serif; font-size:1.05rem; color:var(--ink);">Heirloom Church · Long-Term Budget Model v7</div>
+        <div class="small">Prepared by TurnkeyCFO · Ricky West · May 2026</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span class="pill">Source: Budget Model v7</span>
+        <span class="pill">2025 actual + 2026–2028 plan</span>
+        <span class="pill">Updated monthly</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const fmt = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits: 0 });
+  const fmtK = v => Math.round(v/1000) + 'k';
+  const fontFamily = '"Plus Jakarta Sans", system-ui, sans-serif';
+  Chart.defaults.font.family = fontFamily;
+  Chart.defaults.color = '#4B433A';
+  Chart.defaults.borderColor = '#ECE3D4';
+  Chart.defaults.layout = Chart.defaults.layout || {};
+  Chart.defaults.layout.padding = { left: 18, right: 18, top: 8, bottom: 4 };
+
+  const ORANGE='#E55A1B', SAGE='#6F8B6E', GOLD='#C8923A', TEAL='#3F7B85', ROSE='#B85A5A', INK='#1F1A14';
+
+  // P&L chart
+  new Chart(document.getElementById('pnlChart'), {
+    type: 'bar',
+    data: {
+      labels: ['2025','2026','2027','2028 H1'],
+      datasets: [
+        { label:'Revenue', data:[379431,469136,413800,212700], backgroundColor: ORANGE, borderRadius: 8, barPercentage: .65, categoryPercentage: .6 },
+        { label:'Expenses', data:[419774,395097,423423,235989], backgroundColor: '#E9D6C2', borderRadius: 8, barPercentage: .65, categoryPercentage: .6 },
+        { label:'Net Income', data:[-40343,74039,-9623,-23289], type:'line', yAxisID:'y1', borderColor: SAGE, backgroundColor: SAGE, tension:.35, pointRadius: 5, pointHoverRadius: 7, borderWidth: 3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt.format(ctx.parsed.y) } }
+      },
+      scales: {
+        y:  { ticks:{ callback: v=>fmtK(v) }, grid:{ color:'#F1EADC' } },
+        y1: { position:'right', grid:{ display:false }, ticks:{ callback: v=>fmtK(v) } },
+        x:  { grid:{ display:false } }
+      }
+    }
+  });
+
+  // Revenue stack
+  new Chart(document.getElementById('revStack'), {
+    type:'bar',
+    data: {
+      labels: ['2025','2026','2027','2028 H1'],
+      datasets: [
+        { label:'Internal Tithes', data:[198267,266169,355200,203400], backgroundColor: ORANGE, borderRadius:6 },
+        { label:'External Partners', data:[154940,166914,19000,0], backgroundColor: GOLD, borderRadius:6 },
+        { label:'Designated + Other', data:[26223,36053,39600,9300], backgroundColor: SAGE, borderRadius:6 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{ display:false }, tooltip:{ callbacks:{ label: ctx=>ctx.dataset.label+': '+fmt.format(ctx.parsed.y) } } },
+      scales: {
+        x: { stacked:true, grid:{ display:false } },
+        y: { stacked:true, ticks:{ callback:v=>fmtK(v) }, grid:{ color:'#F1EADC' } }
+      }
+    }
+  });
+
+  // Mix percent
+  new Chart(document.getElementById('mixPct'), {
+    type: 'line',
+    data: {
+      labels: ['2025','2026','2027','2028 H1'],
+      datasets: [
+        { label:'Internal %', data:[52.3,56.7,85.8,95.6], borderColor: ORANGE, backgroundColor:'rgba(229,90,27,.10)', fill:true, tension:.35, pointRadius:5, borderWidth:3 },
+        { label:'External %', data:[40.8,35.6,4.6,0], borderColor: GOLD, backgroundColor:'rgba(200,146,58,.10)', fill:true, tension:.35, pointRadius:5, borderWidth:3 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{ position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } },
+                 tooltip:{ callbacks:{ label: ctx=>ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+'%'} } },
+      scales: {
+        y: { min:0, max:100, ticks:{ callback:v=>v+'%' }, grid:{ color:'#F1EADC' } },
+        x: { grid:{ display:false } }
+      }
+    }
+  });
+
+  // Department donut
+  new Chart(document.getElementById('deptDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Personnel','Operations','Events','Missions','Worship','Family Ministry','Pastoral Care','Admin'],
+      datasets: [{
+        data: [208241, 81873, 43664, 26603, 16433, 9356, 6192, 2736],
+        backgroundColor: [ORANGE, GOLD, ROSE, SAGE, TEAL, '#9B7BB6', '#D08A4A', '#A4A48F'],
+        borderColor: '#fff', borderWidth: 2
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins: {
+        legend:{ position:'right', labels:{ usePointStyle:true, boxWidth:10, padding:14 } },
+        tooltip:{ callbacks:{ label: ctx=>ctx.label+': '+fmt.format(ctx.parsed)+' ('+(ctx.parsed/3950 ).toFixed(0)+')' } }
+      }
+    }
+  });
+
+  // Benchmarks
+  // Each: [name, value%, [low,high], $amount]
+  const benches = [
+    ['Personnel',         50.3, [45,55], 208241, 'ok'],
+    ['Operations',        19.8, [15,25], 81873,  'ok'],
+    ['Events',            10.6, [3,7],   43664,  'high'],
+    ['Missions',          6.4,  [5,15],  26603,  'ok'],
+    ['Worship',           4.0,  [5,10],  16433,  'low'],
+    ['Family Ministry',   2.3,  [5,10],  9356,   'low'],
+    ['Pastoral Care',     1.5,  [3,5],   6192,   'low'],
+    ['Admin',             0.7,  [2,5],   2736,   'low']
+  ];
+  const max = 60;
+  const root = document.getElementById('benchList');
+  benches.forEach(([name, val, band, dollars, flag]) => {
+    const lp = (band[0]/max)*100;
+    const wp = ((band[1]-band[0])/max)*100;
+    const mp = (val/max)*100;
+    const tagText = flag==='ok' ? 'in range' : flag==='high' ? 'above range' : 'below range';
+    const row = document.createElement('div');
+    row.className = 'bench-row';
+    row.innerHTML = `
+      <div class="bench-name">${name}<span class="bench-tag ${flag}">${tagText} · benchmark ${band[0]}–${band[1]}%</span></div>
+      <div class="bench-bar">
+        <div class="bench-band" style="left:${lp}%; width:${wp}%;"></div>
+        <div class="bench-marker" style="left:calc(${mp}% - 2px);" title="${val}% of revenue"></div>
+      </div>
+      <div class="bench-val">${val.toFixed(1)}%<span class="bench-tag">${fmt.format(dollars)}</span></div>`;
+    root.appendChild(row);
+  });
+
+  // Cash line
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  new Chart(document.getElementById('cashLine'), {
+    type:'line',
+    data: {
+      labels: months,
+      datasets: [
+        { label:'2025 actual', data:[62873,51668,47872,38765,27191,21849,23621,36185,21755,22556,18885,12044], borderColor:'#A4A48F', backgroundColor:'rgba(164,164,143,.10)', tension:.35, borderWidth:2.5, pointRadius:3 },
+        { label:'2026 plan',   data:[9563,40726,23439,50000,47709,54734,51042,48428,58826,56861,57194,78266], borderColor: ORANGE, backgroundColor:'rgba(229,90,27,.12)', tension:.35, borderWidth:3, pointRadius:4, fill:true },
+        { label:'2027 plan',   data:[77822,74322,75133,79014,77924,75421,68887,63828,62342,56218,53227,67116], borderColor: SAGE, backgroundColor:'rgba(111,139,110,.10)', tension:.35, borderWidth:3, pointRadius:4 },
+        { label:'2028 plan',   data:[62037,54727,51446,53113,48737,41424,null,null,null,null,null,null], borderColor: TEAL, backgroundColor:'rgba(63,123,133,.10)', tension:.35, borderWidth:3, pointRadius:4, borderDash:[6,4] }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{ position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } },
+                 tooltip:{ callbacks:{ label: ctx=>ctx.dataset.label+': '+fmt.format(ctx.parsed.y) } } },
+      scales: {
+        y: { ticks:{ callback:v=>fmtK(v) }, grid:{ color:'#F1EADC' } },
+        x: { grid:{ display:false } }
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
